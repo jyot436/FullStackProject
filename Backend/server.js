@@ -9,15 +9,15 @@ app.use(cors());
 app.use(express.json());
 app.use("/schoolimages", express.static("schoolimages")); // serve uploaded images
 
-// MySQL connection
+// MySQL connection using env variables
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",       // replace with your MySQL username
-  password: "Suvarna22neelam@", // replace with your MySQL password
-  database: "schooldb"
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME
 });
 
-// Multer setup for image uploads
+// Multer setup
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "schoolimages");
@@ -28,10 +28,8 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// API: Add School
+// Add School API
 app.post("/addSchool", upload.single("image"), (req, res) => {
-      console.log("BODY:", req.body);
-  console.log("FILE:", req.file);
   const { name, address, city, state, contact, email_id } = req.body;
   const image = req.file ? req.file.filename : null;
 
@@ -42,14 +40,15 @@ app.post("/addSchool", upload.single("image"), (req, res) => {
   });
 });
 
-// API: Get Schools
+// Get Schools API
 app.get("/schools", (req, res) => {
   db.query("SELECT * FROM schools", (err, result) => {
     if (err) return res.status(500).json({ error: err });
     res.json(result);
   });
 });
-// API: Delete School by ID
+
+// Delete School API
 app.delete("/school/:id", (req, res) => {
   const { id } = req.params;
   const sql = "DELETE FROM schools WHERE id = ?";
@@ -60,7 +59,7 @@ app.delete("/school/:id", (req, res) => {
   });
 });
 
-
-app.listen(5000, () => {
-  console.log("✅ Server running on http://localhost:5000");
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
 });
