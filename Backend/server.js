@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
@@ -14,7 +15,8 @@ const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
-  database: process.env.DB_NAME
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT
 });
 
 // Multer setup
@@ -33,7 +35,7 @@ app.post("/addSchool", upload.single("image"), (req, res) => {
   const { name, address, city, state, contact, email_id } = req.body;
   const image = req.file ? req.file.filename : null;
 
-  const sql = "INSERT INTO schools (name, address, city, state, contact, email_id, image) VALUES (?, ?, ?, ?, ?, ?, ?)";
+  const sql = "INSERT INTO schools(name, address, city, state, contact, email_id, image) VALUES (?, ?, ?, ?, ?, ?, ?)";
   db.query(sql, [name, address, city, state, contact, email_id, image], (err, result) => {
     if (err) return res.status(500).json({ error: err });
     res.json({ message: "School added successfully!" });
@@ -51,6 +53,7 @@ app.get("/schools", (req, res) => {
 // Delete School API
 app.delete("/school/:id", (req, res) => {
   const { id } = req.params;
+  // Change table name to 'schooldb' here
   const sql = "DELETE FROM schools WHERE id = ?";
   
   db.query(sql, [id], (err, result) => {
