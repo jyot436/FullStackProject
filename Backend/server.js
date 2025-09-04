@@ -10,6 +10,11 @@ app.use(cors());
 app.use(express.json());
 app.use("/schoolimages", express.static("schoolimages")); // serve uploaded images
 
+// Root route to verify server is running
+app.get("/", (req, res) => {
+  res.send("Backend server is running");
+});
+
 // MySQL connection using env variables
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -53,9 +58,8 @@ app.get("/schools", (req, res) => {
 // Delete School API
 app.delete("/school/:id", (req, res) => {
   const { id } = req.params;
-  // Change table name to 'schooldb' here
   const sql = "DELETE FROM schools WHERE id = ?";
-  
+
   db.query(sql, [id], (err, result) => {
     if (err) return res.status(500).json({ error: err });
     res.json({ message: "School deleted successfully!" });
