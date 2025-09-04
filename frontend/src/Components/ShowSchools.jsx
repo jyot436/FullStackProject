@@ -7,7 +7,7 @@ export default function ShowSchools() {
 
   // Fetch schools
   useEffect(() => {
-    axios.get("http://localhost:5000/schools")
+    axios.get("https://fullstackproject-2-yn0g.onrender.com/schools")
       .then(res => setSchools(res.data))
       .catch(err => console.error(err));
   }, []);
@@ -17,7 +17,7 @@ export default function ShowSchools() {
     if (!window.confirm("Are you sure you want to delete this school?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/school/${id}`);
+      await axios.delete(`https://fullstackproject-2-yn0g.onrender.com/school/${id}`);
       setSchools(schools.filter(s => s.id !== id)); // remove from UI
       alert("✅ School deleted successfully!");
     } catch (err) {
@@ -30,7 +30,7 @@ export default function ShowSchools() {
     <div className="school-list">
       {schools.map(school => (
         <div className="school-card" key={school.id}>
-          <img src={`http://localhost:5000/schoolimages/${school.image}`} alt={school.name} />
+          <img src={`https://fullstackproject-2-yn0g.onrender.com/schoolimages/${school.image}`} alt={school.name} />
           <h3>{school.name}</h3>
           <p>{school.address}, {school.city}, {school.state}</p>
           <p><b>Contact:</b> {school.contact}</p>

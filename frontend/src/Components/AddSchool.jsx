@@ -21,7 +21,7 @@ export default function AddSchool() {
   }
 
     try {
-      await axios.post("http://localhost:5000/addSchool", formData, {
+      await axios.post("https://fullstackproject-2-yn0g.onrender.com/addSchool", formData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
       alert("✅ School added successfully!");
